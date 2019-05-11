@@ -16,5 +16,40 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />
+    <None Include="..\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="entryBlock.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="list.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="process.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="stackSimulator.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ticks.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="list.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pcbUtil.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="process.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stackSimulator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ticks.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

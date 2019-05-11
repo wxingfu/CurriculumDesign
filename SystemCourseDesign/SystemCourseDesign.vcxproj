@@ -116,6 +116,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />
+    <None Include="..\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="entryBlock.c" />
+    <ClCompile Include="list.c" />
+    <ClCompile Include="process.c" />
+    <ClCompile Include="stackSimulator.c" />
+    <ClCompile Include="ticks.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="list.h" />
+    <ClInclude Include="pcbUtil.h" />
+    <ClInclude Include="process.h" />
+    <ClInclude Include="stackSimulator.h" />
+    <ClInclude Include="ticks.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
