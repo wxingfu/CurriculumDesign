@@ -1,8 +1,10 @@
-﻿#pragma once
-#include<stdio.h>
-#include<stdlib.h>
-#include<time.h>
+﻿#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
+
+
+//枚举链表状态
 typedef enum {
 	LISTReady,
 	LISTBlocking,
@@ -10,9 +12,13 @@ typedef enum {
 	LISTonINIT
 }LIST_STATUS;
 
+//声明进程链表结构体
 typedef struct ProcessList ProcessList;
+
+//声明链表项结构体
 typedef struct ListItem ListItem;
-//typedef struct subordinateListItem subordinateListItem;
+
+//定义链表项结构体
 typedef struct ListItem {
 	clock_t runTime;
 	ListItem* next;
@@ -23,20 +29,15 @@ typedef struct ListItem {
 
 }ListItem;
 
-//typedef struct subordinateListItem {
-//	ListItem* next;
-//	ListItem* previous;
-//	unsigned priorityValue;
-//}subordinateListItem;
-
+//定义进程链表结构体
 typedef struct ProcessList {
 	volatile unsigned numberOfProcesses;
 	ListItem* ListItemIndex;
 	ListItem* lastItem;
 	LIST_STATUS listType;
-
 }ProcessList;
 
+//将PCB指针指向对应的链表
 #define setListPCB_Pointer(ListItem,PCBpointer) ((ListItem)->PCB_block=(void*)PCBpointer)
 
 //定义最多进程数
@@ -47,15 +48,15 @@ typedef struct ProcessList {
 
 //获得当前链表进程数
 #define GET_LIST_NUMBER(List) ((List)->numberOfProcesses)
+
 //获得当前列表项优先级
 #define GET_priorityValue(Item) ((Item)->priorityValue)
+
 //设置当前列表项优先级
 #define SET_priorityValue(Item,value) ((Item)->priorityValue=value)
+
 //判断当前列表是否为空
 #define LIST_IS_EMPTY(list) ((list->numberOfProcesses==0)?1:0)
-
-
-
 
 //获得链表下一个时间片的进程
 #define listGET_OWNER_OF_NEXT_ENTRY( pcb, pxList )										\
@@ -80,15 +81,20 @@ ProcessList * const pxConstList = ( pxList );													\
 //设置列表项值
 #define listSetListItemValue(listItem,value) ((listItem)->runTime=value)
 
-
+//初始化链表
 void InitProcessList(ProcessList* list);
 
+//初始化链表项
 void InitListItem(ListItem* item);
 
+//插入一个链表项到链表
 void InsertItemIntoProcessList(ListItem* item, ProcessList* list);
 
+//插入一个链表项到链表末尾
 void InsertItemToListEnd(ListItem*item, ProcessList* list);
 
+//移除一个链表项
 int DeleteFromList(ListItem*item);
 
+//设置链表状态
 void SET_LIST_STATE(ProcessList* list, LIST_STATUS status);
