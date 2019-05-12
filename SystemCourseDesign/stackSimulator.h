@@ -8,22 +8,26 @@
 #define MAX_STACK_LENGTH 20
 
 
-typedef struct OSstackSimulatorItem {
+typedef struct OSstackSimulatorItem
+{
 	PCB_t* pcb;
 	void* functionValue;
 	struct OSstackSimulatorItem* next;
 	int index;
+
 }OSstackSimulatorItem;
 
 
 typedef struct OSstackSimulatorItem OSstackSimulatorItem_t;
 
 
-typedef struct OSstack {
+typedef struct OSstack
+{
 	OSstackSimulatorItem_t * startSimulatorItem;
 	int currentDeepth;
 	int totalLength;
 	OSstackSimulatorItem_t*lastItem;
+
 }OSstack;
 
 

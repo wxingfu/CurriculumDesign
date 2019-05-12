@@ -4,22 +4,25 @@
 //初始化信号量
 void initSemphores()
 {
+	//时钟中断互斥量
 	timeInterruptMutex = CreateMutex(NULL, TRUE, NULL);
 
+	//修改链表的互斥量
 	modifyListMutex = CreateMutex(NULL, TRUE, NULL);
 
+	//时钟数的互斥量
 	tickCountMutex = CreateMutex(NULL, TRUE, NULL);
 
+	//中断信号量
 	INTERRUPTION = CreateSemaphore(NULL, 0, 1, NULL);
 
+	//调度互斥量
 	schedulerMutex = CreateMutex(NULL, TRUE, NULL);
 
+	//互斥量的释放
 	ReleaseMutex(timeInterruptMutex);
-
 	ReleaseMutex(modifyListMutex);
-
 	ReleaseMutex(tickCountMutex);
-
 	ReleaseMutex(schedulerMutex);
 }
 
@@ -29,10 +32,14 @@ DWORD WINAPI startTimer(LPVOID param)
 {
 	tickCount = 0;
 
-	while (1) {
+	while (1)
+	{
 		Sleep(tickTime);
+
 		checkTickCountOverflow();
+
 		WaitForSingleObject(tickCountMutex, INFINITE);
+
 		//时钟加一
 		tickCount++;
 
@@ -63,9 +70,7 @@ BOOL checkTickCountOverflow()
 	//如果溢出返回
 	if ((currentTickCount++) < currentTickCount)
 	{
-
 		result = FALSE;
-
 		tickCount = 0;
 	}
 	else {
@@ -94,8 +99,6 @@ void enter_list_critical()
 
 	//修改列表的互斥锁
 	WaitForSingleObject(modifyListMutex, INFINITE);
-
-
 }
 
 

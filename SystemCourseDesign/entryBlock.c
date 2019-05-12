@@ -7,7 +7,9 @@
 #include "stackSimulator.h"
 #include "process.h"
 
+//最大运行时间
 #define MAX_RUN_TIME 2000000000
+
 
 //声明打印信息函数
 void printInformation();
@@ -16,23 +18,29 @@ void printInformation();
 //任务函数
 void test(void*a)
 {
+	//随机种子
 	srand((unsigned)time(NULL));
 
 	int count = a;
 
 	while (count++)
 	{
+		//计时，用于模拟时间片
 		clock_t start = clock();
 
+		//随机[100,150]s睡眠
 		Sleep(rand() % 100 + 50);
 
+		//查找堆栈中正在运行的进程，目的是获取任务函数的返回值
 		OSstackSimulatorItem_t*placeOfValue = findRunningItem();
+
 		//printf("test现在执行的进程:%s\n",placeOfValue->pcb->PCBname);
 		//printf("进程的运行结果(将被写会内存):%d\n",count);
 		if (placeOfValue != NULL)
 		{
 			ENTER_CRITICAL();
 			{
+				//更新任务函数参数值
 				placeOfValue->functionValue = count;
 				//printf("更新完成\n");
 				//printf("%d\n",(*STATIC_OS_STACK)->startSimulatorItem->next->functionValue);
@@ -59,7 +67,6 @@ void test(void*a)
 //任务函数1
 void test1(void*a)
 {
-
 	while (1)
 	{
 		Sleep(200);
@@ -151,9 +158,10 @@ DWORD WINAPI displayFun(LPVOID param)
 //打印信息函数实现
 void printInformation()
 {
-
+	//获取堆栈迭代器
 	OSstackSimulatorItem * iter = (*STATIC_OS_STACK)->startSimulatorItem;
 
+	//循环打印进程信息
 	while (1)
 	{
 		iter = iter->next;
@@ -176,23 +184,45 @@ void printInformation()
 
 int main()
 {
-	//完成一些初始化
+	//初始化堆栈
 	initOSstackSimulator();
+
+	//初始化静态链表
 	initStaticLists();
+
+	//初始化信号量
 	initSemphores();
+
+	//设置退出信号
 	exit_signal = FALSE;
+
+	//设置阻塞信号
 	blocking_signal = 0;
+
+	//分配进程终止时的空间
 	processExitBuf = malloc(sizeof(EXIT_PROCESS));
+
+	//分配指向退出进程函数的指针的空间
 	(*processExitBuf) = (EXIT_PROCESS*)malloc(sizeof(EXIT_PROCESS));
+
+	//初始进程数
 	CurrentProcessNumer = 0;
+
+	//初始就绪进程的最高优先级
 	TopPriorityReadyProcess = 30;
+
+	//初始进程指针的内存空间
 	PCB_t **freeProcess = malloc(sizeof(PCB));
+
+	//系统进程名称
 	char name3[MAX_NAME_LENGTH] = "FreeProcess";
 
 	//创建系统进程
 	CreateNewProcess(runInFreeTime, name3, 1, NULL, 0, freeProcess, INFINITE);
+
 	//创建定时器
 	CreateTimer();
+
 	//调用菜单函数
 	HANDLE display = CreateThread(NULL, 0, displayFun, NULL, 0, NULL);
 

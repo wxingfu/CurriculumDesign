@@ -1,7 +1,4 @@
-﻿#include <stddef.h>
-#include <string.h>
-
-#include "process.h"
+﻿#include "process.h"
 #include "stackSimulator.h"
 
 
@@ -9,28 +6,33 @@
 static volatile long SchedulerSuspended = (long)FALSE;
 
 
+//查找最高优先级的进程
 void  FindTopProrityProcess()
 {
 	unsigned int topProrityProcess = MAX_PROCESS_PRIORITY - 1;
 
+	//先判断就绪队列里是否有这个优先级的进程
 	while (listIsEmpty(ProcessReadyList[topProrityProcess])) {
 
 		--topProrityProcess;
 	}
 
+	//时间片到时切换列表项
 	listChangeListItemWithTime(ProcessReadyList[topProrityProcess]);
 
 	TopPriorityReadyProcess = topProrityProcess;
 }
 
 
-
+//选择最高优先级进程
 void proSELECT_HIGHEST_PRIORITY_PROCESS()
 {
+	//？
 	unsigned int uxTopPriority = TopPriorityReadyProcess;
 
 	FindTopProrityProcess();
 
+	//时间片到时切换列表项
 	listChangeListItemWithTime(ProcessReadyList[uxTopPriority]);
 }
 
@@ -39,19 +41,20 @@ void proSELECT_HIGHEST_PRIORITY_PROCESS()
 void listChangeListItemWithTime(ProcessList * list)
 {
 	ProcessList* ConstList = (list);
-
+	//?
 	ConstList->ListItemIndex = ConstList->ListItemIndex->next;
 
 	if (ConstList->ListItemIndex == ConstList->lastItem)
 	{
 		ConstList->ListItemIndex = ConstList->ListItemIndex->next;
 	}
-
+	//?
 	CurrentPCB_pointer = ConstList->ListItemIndex->PCB_block;
 }
 
 
 
+//初始化静态链表
 int initStaticLists()
 {
 	int result = 1;
@@ -117,12 +120,11 @@ int initStaticLists()
 
 
 
-
+//释放静态链表
 void freeStaticLists()
 {
 	for (int i = 0; i < MAX_PROCESS_PRIORITY; i++)
 	{
-
 		free(ProcessReadyList[i]);
 	}
 
@@ -131,32 +133,35 @@ void freeStaticLists()
 	free(ProcessDeleteList);
 }
 
+
+
+//创建进程
 int CreateNewProcess(ProcessFunction_t function, const char * const name,
 	const unsigned int stackLength, void * const parameters,
 	unsigned int prority, PCB**pcb, time_t runTime)
 {
 	PCB_t* newPCB;
 
+	//用于标记创建结果
 	int createResult;
 
 	newPCB = myMalloc(sizeof(PCB_t));
 
 	if (newPCB != NULL)
 	{
+		//将PCB加入栈中，如果过为0,则添加失败
 		if (addPcbToStack(newPCB, parameters) == 0)
 		{
 			myFree(newPCB);
-
 			newPCB = NULL;
-
 			createResult = 0;
 		}
 		else {
-
+			//创建一个新进程
 			InitialNewProcess(function, name, stackLength, parameters, prority, newPCB, runTime);
-
+			//将新进程加入就绪队列里
 			addProcessToReadyList(newPCB);
-
+			//设置状态
 			newPCB->status = READY;
 
 			createResult = 1;
@@ -168,16 +173,20 @@ int CreateNewProcess(ProcessFunction_t function, const char * const name,
 	return createResult;
 }
 
+
+
+//初始化新进程
 void InitialNewProcess(ProcessFunction_t function, const char * const name,
 	const unsigned int stackLength, void * const parameters,
 	unsigned int prority, PCB * pcb, time_t runTime)
 {
+	//设置任务函数参数值
 	pcb->function = function;
-
+	//设置进程名称
 	strcpy_s(pcb->PCBname, MAX_NAME_LENGTH, name);
-
+	//设置栈深
 	pcb->stackAddress.length = stackLength;
-
+	//检查优先级合法性，并设置优先级
 	if (prority >= MAX_PROCESS_PRIORITY || prority < 0)
 	{
 		printf("进程优先级错误");
@@ -186,7 +195,7 @@ void InitialNewProcess(ProcessFunction_t function, const char * const name,
 	else {
 		pcb->processPriority = prority;
 	}
-
+	//?
 	pcb->IDofPCB = pcb->stackPosition;
 
 	//初始化堆栈中的进程任务初始参数
@@ -195,7 +204,7 @@ void InitialNewProcess(ProcessFunction_t function, const char * const name,
 
 
 
-
+//添加进程到就绪队列
 void addProcessToReadyList(PCB_t * newPcb)
 {
 	int prority = newPcb->processPriority;
@@ -208,6 +217,7 @@ void addProcessToReadyList(PCB_t * newPcb)
 		//当前进程数量为0
 		if (CurrentProcessNumer == 0 && ProcessReadyList == NULL)
 		{
+			//初始化静态全局链表
 			int initResult = initStaticLists();
 
 			//初始化静态全局列表失败
@@ -311,7 +321,7 @@ void addProcessToReadyList(PCB_t * newPcb)
 
 
 
-
+//删除即终止 进程
 int DeleteProcess(PCB * pcb)
 {
 	PCB* pcbToDelete = pcb;
@@ -331,6 +341,7 @@ int DeleteProcess(PCB * pcb)
 			CurrentPCB_pointer = NULL;
 		}
 		else {
+			//?
 			CurrentPCB_pointer = pcbToDelete->hostItem->hostList->lastItem->next->PCB_block;
 		}
 		CurrentProcessNumer--;
@@ -360,6 +371,7 @@ int DeleteProcess(PCB * pcb)
 
 
 
+//阻塞进程
 int BlockedProcess(int pcbID)
 {
 	//找到要阻塞的PCB
@@ -388,6 +400,7 @@ int BlockedProcess(int pcbID)
 
 
 
+//唤醒进程
 int WakeupProcess(int pcbID)
 {
 	//找到要唤醒的PCB
@@ -411,6 +424,7 @@ int WakeupProcess(int pcbID)
 
 
 
+//停止全部
 void schedulerStopAll(void)
 {
 	//等待中断信号量，相当于关中断
@@ -420,6 +434,7 @@ void schedulerStopAll(void)
 
 
 
+//唤醒全部
 void schedulerResume(void)
 {
 	ReleaseMutex(modifyListMutex);
@@ -427,7 +442,7 @@ void schedulerResume(void)
 
 
 
-
+//分配内存函数
 void * myMalloc(size_t newSize)
 {
 	void*parameterOfReturn;
@@ -443,7 +458,7 @@ void * myMalloc(size_t newSize)
 
 
 
-
+//释放内存函数
 void myFree(void*pointer)
 {
 	if (NULL != pointer)
@@ -458,7 +473,7 @@ void myFree(void*pointer)
 }
 
 
-
+//进程上下文切换
 void processSwitchContext()
 {
 	if (schdulerStatus != SCHEDULER_STOP)
@@ -483,6 +498,7 @@ DWORD WINAPI processThreadFun(LPVOID param)
 
 	int*value = NULL;
 
+	//查找任务函数返回值
 	value = (int*)findFunValueByPcbID(CurrentPCB_pointer->IDofPCB);
 
 	//printf("找到的值：%d\n",value);
@@ -496,6 +512,7 @@ DWORD WINAPI processThreadFun(LPVOID param)
 
 
 
+//调度器
 void startScheduler()
 {
 	//创建一个进程 模拟调度器
@@ -513,13 +530,16 @@ void startScheduler()
 			exit_signal = FALSE;
 		}
 
+		//退出线程
 		TerminateThread(processThread, 0);
 
+		//?
 		if (CurrentPCB_pointer != NULL)
 		{
 			CurrentPCB_pointer->status = READY;
 		}
 
+		//?
 		if (blocking_signal = 1 && CurrentPCB_pointer != NULL)
 		{
 			CurrentPCB_pointer->status = BLOCKING;
@@ -532,7 +552,7 @@ void startScheduler()
 }
 
 
-
+//?
 void runInFreeTime(void*a)
 {
 	while (1)
@@ -543,7 +563,7 @@ void runInFreeTime(void*a)
 }
 
 
-
+//链表判空，链表内进程数为0则空
 int listIsEmpty(ProcessList * list)
 {
 	if (list->numberOfProcesses == 0)

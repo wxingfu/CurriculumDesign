@@ -1,7 +1,7 @@
 ﻿#include "stackSimulator.h"
 
 
-//
+//初始化栈
 int initOSstackSimulator()
 {
 	OSstack* newStack = (OSstack*)malloc(sizeof(OSstack));
@@ -15,8 +15,9 @@ int initOSstackSimulator()
 		return 0;
 	}
 	else {
+		//设置栈深
 		newStack->currentDeepth = 0;
-
+		//设置总栈深
 		newStack->totalLength = MAX_STACK_LENGTH;
 
 		newStack->startSimulatorItem = newItem;
@@ -42,14 +43,20 @@ int initOSstackSimulator()
 }
 
 
-
+//添加PCB到栈
 int addPcbToStack(PCB_t * newPcb, void*const  paramter)
 {
-	if ((*STATIC_OS_STACK)->currentDeepth == MAX_STACK_LENGTH) return 0;
+	if ((*STATIC_OS_STACK)->currentDeepth == MAX_STACK_LENGTH)
+	{
+		return 0;
+	}
 
 	OSstackSimulatorItem_t *item = (OSstackSimulatorItem*)malloc(sizeof(OSstackSimulatorItem));
 
-	if (item == NULL)return 0;
+	if (item == NULL)
+	{
+		return 0;
+	}
 
 	item->pcb = newPcb;
 
@@ -82,7 +89,7 @@ int addPcbToStack(PCB_t * newPcb, void*const  paramter)
 }
 
 
-
+//从栈里删除进程
 int deletePcbFromStack(int idOfPcb)
 {
 	int result;
@@ -109,8 +116,8 @@ int deletePcbFromStack(int idOfPcb)
 				if (iterator->next->pcb->IDofPCB == idOfPcb)
 				{
 					iterator->next = iterator->next->next;
-
 					(*STATIC_OS_STACK)->currentDeepth--;
+
 					printf("删除了一个stack");
 					break;
 				}
@@ -123,6 +130,7 @@ int deletePcbFromStack(int idOfPcb)
 
 
 
+//通过进程ID查找指定进程
 PCB_t* findPCB_ById(int id)
 {
 	OSstackSimulatorItem_t * iterator;
@@ -153,6 +161,7 @@ PCB_t* findPCB_ById(int id)
 
 
 
+//通过进程ID查找进程任务函数的值
 void * findFunValueByPcbID(int id)
 {
 	OSstackSimulatorItem_t * iterator;
@@ -184,6 +193,7 @@ void * findFunValueByPcbID(int id)
 
 
 
+//查找正在运行的进程
 OSstackSimulatorItem * findRunningItem()
 {
 	OSstackSimulatorItem_t * iterator;

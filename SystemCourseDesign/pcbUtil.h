@@ -125,6 +125,7 @@ static long xYieldPending = 0;
 //进程退出的信号
 int exit_signal;
 
+//进程退出指针
 EXIT_PROCESS **processExitBuf;
 
 
