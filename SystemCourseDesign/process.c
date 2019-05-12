@@ -5,10 +5,8 @@
 #include "stackSimulator.h"
 
 
-
 //用于挂起调度器的变量
 static volatile long SchedulerSuspended = (long)FALSE;
-
 
 
 void  FindTopProrityProcess()

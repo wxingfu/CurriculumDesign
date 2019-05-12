@@ -1,6 +1,4 @@
-﻿#pragma once
-#include "list.h"
-
+﻿#include "list.h"
 
 
 //初始化链表

@@ -1,7 +1,11 @@
-﻿#include <Windows.h>
+﻿#ifndef TICK_H
+#define TICK_H
+
+
+#include <Windows.h>
 #include <signal.h>
 #include <stdint.h>
-
+#include <stdio.h>
 
 
 //时钟计数器
@@ -66,3 +70,7 @@ void enter_list_critical();
 
 //退出修改数据结构临界区
 void exit_list_critical();
+
+
+
+#endif // !TICK_H

@@ -1,6 +1,5 @@
-﻿#include <stdio.h>
+﻿#include "ticks.h"
 
-#include "ticks.h"
 
 //初始化信号量
 void initSemphores()

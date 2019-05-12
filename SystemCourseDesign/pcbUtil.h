@@ -1,4 +1,9 @@
-﻿#include"list.h"
+﻿#ifndef UTIL_H
+#define UTIL_H
+
+
+#include"list.h"
+
 
 #define MAX_NAME_LENGTH 20
 
@@ -121,3 +126,7 @@ static long xYieldPending = 0;
 int exit_signal;
 
 EXIT_PROCESS **processExitBuf;
+
+
+
+#endif // !UTIL_H

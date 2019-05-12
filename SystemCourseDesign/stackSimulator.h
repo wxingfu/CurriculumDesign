@@ -1,10 +1,11 @@
-﻿#include "pcbUtil.h"
+﻿#ifndef STACK_H
+#define STACK_H
 
-#include <stdio.h>
+
+#include "pcbUtil.h"
 
 
 #define MAX_STACK_LENGTH 20
-
 
 
 typedef struct OSstackSimulatorItem {
@@ -46,3 +47,7 @@ void*findFunValueByPcbID(int id);
 
 
 OSstackSimulatorItem*findRunningItem();
+
+
+
+#endif // !STACK_H

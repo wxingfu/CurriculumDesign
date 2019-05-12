@@ -1,10 +1,13 @@
-﻿#include <stdint.h>
+﻿#ifndef PROCESS_H
+#define PROCESS_H
+
 
 #include "pcbUtil.h"
 #include "ticks.h"
 
 
-#define GET_PCB_STATUS(pcb) (pcb->status)
+#define GET_PCB_STATUS(pcb)		(pcb->status)
+
 
 //阻塞进程的信号
 int blocking_signal;
@@ -74,3 +77,7 @@ void runInFreeTime(void*a);
 
 
 int listIsEmpty(ProcessList*list);
+
+
+
+#endif // !PROCESS_H

@@ -1,7 +1,10 @@
-﻿#include <stdio.h>
+﻿#ifndef LIST_H
+#define LIST_H
+
+
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
 
 
 //枚举链表状态
@@ -98,3 +101,7 @@ int DeleteFromList(ListItem*item);
 
 //设置链表状态
 void SET_LIST_STATE(ProcessList* list, LIST_STATUS status);
+
+
+
+#endif // !LIST_H

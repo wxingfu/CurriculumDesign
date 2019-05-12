@@ -1,7 +1,7 @@
 ﻿#include "stackSimulator.h"
 
 
-
+//
 int initOSstackSimulator()
 {
 	OSstack* newStack = (OSstack*)malloc(sizeof(OSstack));
