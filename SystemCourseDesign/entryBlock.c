@@ -9,7 +9,11 @@
 
 #define MAX_RUN_TIME 2000000000
 
+//声明打印信息函数
+void printInformation();
 
+
+//任务函数
 void test(void*a)
 {
 	srand((unsigned)time(NULL));
@@ -52,7 +56,7 @@ void test(void*a)
 }
 
 
-
+//任务函数1
 void test1(void*a)
 {
 
@@ -64,7 +68,7 @@ void test1(void*a)
 }
 
 
-
+//任务函数0
 void test0(void*a)
 {
 	while (1)
@@ -75,9 +79,7 @@ void test0(void*a)
 }
 
 
-void printInformation();
-
-
+//菜单显示函数
 DWORD WINAPI displayFun(LPVOID param)
 {
 	int choice;
@@ -146,7 +148,7 @@ DWORD WINAPI displayFun(LPVOID param)
 }
 
 
-
+//打印信息函数实现
 void printInformation()
 {
 
@@ -176,39 +178,30 @@ int main()
 {
 	//完成一些初始化
 	initOSstackSimulator();
-
 	initStaticLists();
-
 	initSemphores();
-
 	exit_signal = FALSE;
-
 	blocking_signal = 0;
-
 	processExitBuf = malloc(sizeof(EXIT_PROCESS));
-
 	(*processExitBuf) = (EXIT_PROCESS*)malloc(sizeof(EXIT_PROCESS));
-
 	CurrentProcessNumer = 0;
-
 	TopPriorityReadyProcess = 30;
-
 	PCB_t **freeProcess = malloc(sizeof(PCB));
-
 	char name3[MAX_NAME_LENGTH] = "FreeProcess";
 
+	//创建系统进程
 	CreateNewProcess(runInFreeTime, name3, 1, NULL, 0, freeProcess, INFINITE);
-
+	//创建定时器
 	CreateTimer();
-
+	//调用菜单函数
 	HANDLE display = CreateThread(NULL, 0, displayFun, NULL, 0, NULL);
 
+	//启动调度器
 	startScheduler();
 
+	//释放内存
 	free(*processExitBuf);
-
 	free(processExitBuf);
-
 	freeStaticLists();
 
 	system("pause");
