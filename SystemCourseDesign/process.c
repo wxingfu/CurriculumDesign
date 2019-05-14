@@ -203,13 +203,35 @@ void InitialNewProcess(ProcessFunction_t function, const char * const name,
 }
 
 
+//添加进程到就绪队列辅助函数
+void addProcToReadyList(PCB_t * newPcb, int prority)
+{
+	ListItem* newListItem = myMalloc(sizeof(ListItem));
+
+	InitListItem(newListItem);
+
+	newListItem->PCB_block = newPcb;
+
+	newPcb->hostItem = newListItem;
+
+	SET_priorityValue(newListItem, newPcb->processPriority);
+
+	InsertItemIntoProcessList(newListItem, ProcessReadyList[prority]);
+
+	if (newPcb->processPriority >= TopPriorityReadyProcess)
+	{
+		TopPriorityReadyProcess = newPcb->processPriority;
+	}
+
+	CurrentProcessNumer++;
+}
 
 //添加进程到就绪队列
 void addProcessToReadyList(PCB_t * newPcb)
 {
-	int prority = newPcb->processPriority;
+	int priority = newPcb->processPriority;
 
-	//当前进程指针是否为空
+	//当前进程指针为空
 	if (CurrentPCB_pointer == NULL)
 	{
 		CurrentPCB_pointer = newPcb;
@@ -228,47 +250,12 @@ void addProcessToReadyList(PCB_t * newPcb)
 			}
 			//初始化成功
 			else {
-				ListItem* newListItem = myMalloc(sizeof(ListItem));
-
-				InitListItem(newListItem);
-
-				newListItem->PCB_block = newPcb;
-
-				newPcb->hostItem = newListItem;
-
-				SET_priorityValue(newListItem, newPcb->processPriority);
-
-				InsertItemIntoProcessList(newListItem, ProcessReadyList[prority]);
-
-				if (newPcb->processPriority >= TopPriorityReadyProcess)
-				{
-					TopPriorityReadyProcess = newPcb->processPriority;
-				}
-
-				CurrentProcessNumer++;
+				addProcToReadyList(newPcb, priority);
 			}
 		}
 		//进程数量不为零
 		else {
-
-			ListItem* newListItem = myMalloc(sizeof(ListItem));
-
-			InitListItem(newListItem);
-
-			newListItem->PCB_block = newPcb;
-
-			newPcb->hostItem = newListItem;
-
-			SET_priorityValue(newListItem, newPcb->processPriority);
-
-			InsertItemIntoProcessList(newListItem, ProcessReadyList[prority]);
-
-			if ((newPcb->processPriority) >= TopPriorityReadyProcess)
-			{
-				TopPriorityReadyProcess = newPcb->processPriority;
-			}
-
-			CurrentProcessNumer++;
+			addProcToReadyList(newPcb, priority);
 		}
 	}
 	//进程指针不为空
@@ -303,19 +290,7 @@ void addProcessToReadyList(PCB_t * newPcb)
 			}
 		}
 
-		ListItem* newListItem = myMalloc(sizeof(ListItem));
-
-		InitListItem(newListItem);
-
-		newListItem->PCB_block = newPcb;
-
-		newPcb->hostItem = newListItem;
-
-		SET_priorityValue(newListItem, newPcb->processPriority);
-
-		InsertItemIntoProcessList(newListItem, ProcessReadyList[prority]);
-
-		CurrentProcessNumer++;
+		addProcToReadyList(newPcb, priority);
 	}
 }
 

@@ -1,13 +1,13 @@
 ﻿  entryBlock.c
-d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\entryblock.c(36): warning C4047: “=”:“void *”与“int”的间接级别不同
-d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\entryblock.c(21): warning C4047: “初始化”:“int”与“void *”的间接级别不同
-d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\entryblock.c(114): warning C4312: “类型强制转换”: 从“int”转换到更大的“int *”
-d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\entryblock.c(168): warning C4311: “类型强制转换”: 从“void *”到“int”的指针截断
+d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\entryblock.c(44): warning C4047: “=”:“void *”与“int”的间接级别不同
+d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\entryblock.c(24): warning C4047: “初始化”:“int”与“void *”的间接级别不同
+d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\entryblock.c(121): warning C4312: “类型强制转换”: 从“int”转换到更大的“int *”
+d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\entryblock.c(176): warning C4311: “类型强制转换”: 从“void *”到“int”的指针截断
   list.c
   process.c
-d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\process.c(190): warning C4244: “=”: 从“time_t”转换到“clock_t”，可能丢失数据
+d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\process.c(202): warning C4244: “=”: 从“time_t”转换到“clock_t”，可能丢失数据
   stackSimulator.c
-d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\stacksimulator.c(75): warning C4047: “=”:“void *volatile ”与“int”的间接级别不同
+d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\stacksimulator.c(82): warning C4047: “=”:“void *volatile ”与“int”的间接级别不同
   正在生成代码...
-d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\process.c(492): warning C4716: “processThreadFun”: 必须返回一个值
+d:\codefile\vs-workspace\systemcoursedesign\systemcoursedesign\process.c(486): warning C4716: “processThreadFun”: 必须返回一个值
   SystemCourseDesign.vcxproj -> D:\codefile\vs-workspace\SystemCourseDesign\x64\Debug\SystemCourseDesign.exe

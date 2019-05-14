@@ -25,7 +25,6 @@ void test(void*a)
 
 	while (count++)
 	{
-		//计时，用于模拟时间片
 		clock_t start = clock();
 
 		//随机[100,150]s睡眠
@@ -199,10 +198,8 @@ int main()
 	//设置阻塞信号
 	blocking_signal = 0;
 
-	//分配进程终止时的空间
 	processExitBuf = malloc(sizeof(EXIT_PROCESS));
 
-	//分配指向退出进程函数的指针的空间
 	(*processExitBuf) = (EXIT_PROCESS*)malloc(sizeof(EXIT_PROCESS));
 
 	//初始进程数
@@ -211,7 +208,7 @@ int main()
 	//初始就绪进程的最高优先级
 	TopPriorityReadyProcess = 30;
 
-	//初始进程指针的内存空间
+	//初始化PCB
 	PCB_t **freeProcess = malloc(sizeof(PCB));
 
 	//系统进程名称
@@ -220,7 +217,7 @@ int main()
 	//创建系统进程
 	CreateNewProcess(runInFreeTime, name3, 1, NULL, 0, freeProcess, INFINITE);
 
-	//创建定时器
+	//创建计数器
 	CreateTimer();
 
 	//调用菜单函数

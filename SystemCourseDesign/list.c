@@ -14,8 +14,6 @@ void InitProcessList(ProcessList * list)
 
 	list->listType = LISTonINIT;
 
-	list->ListItemIndex = list->lastItem;
-
 	list->lastItem->priorityValue = MAX_subordinateListItemValue;
 
 }
