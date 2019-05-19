@@ -9,28 +9,23 @@
 
 #define MAX_PROCESS_PRIORITY 35
 
-
 #define listSELECT_HIGHEST_PRIORITY_TACK() {\
 	listGET_OWNER_OF_NEXT_ENTRY(CurrentPCB_pointer, &ProcessReadyList[TopPriorityReadyProcess]);\
 }\
 
 
-typedef enum
-{
+typedef enum {
 	SCHEDULER_RUNNING = 1,
 	SCHEDULER_STOP = 0
-
 }SCHEDULER_STATUS;
 
 
-typedef enum
-{
+typedef enum {
 	BLOCKING = 0,
 	SUSPEND,
 	RUNNING,
 	READY,
 	DELETED
-
 }PCB_STATUS;
 
 
@@ -39,49 +34,36 @@ typedef enum
 typedef void(*ProcessFunction_t)(void*);
 
 
-typedef struct PCB_ADDRESSofMEMORY
-{
-	void* start;
-	unsigned int length;
-
+typedef struct PCB_ADDRESSofMEMORY {
+	void* start;//起始地址
+	unsigned int length;//偏移量
 }PCB_ADDRESSofMEMORY;
 
 
-typedef struct ProcessControllBlock
-{
+typedef struct ProcessControllBlock {
 	volatile PCB_ADDRESSofMEMORY stackAddress;
-
 	ListItem *hostItem;					//指向的父列表项
-
 	clock_t runTime;					//进程运行时间
-
 	char PCBname[MAX_NAME_LENGTH];		//进程名称
-
 	unsigned int processPriority;		//进程优先级
-
 	PCB_STATUS status;					//进程状态
-
 	unsigned int IDofPCB;				//进程id
-
 	ProcessFunction_t function;			//进程函数
-
 	int stackPosition;					//进程在堆栈中的位置
 }PCB;
+
 
 typedef PCB PCB_t;
 
 
 //进程结束的存储体
-typedef struct EXIT_PROCESS
-{
+typedef struct EXIT_PROCESS {
 	PCB_t*pcb;
-
 }EXIT_PROCESS;
 
 
 //正在处理的进程
 PCB_t* volatile CurrentPCB_pointer;
-
 
 //全局就绪列表
 ProcessList* ProcessReadyList[MAX_PROCESS_PRIORITY];
@@ -106,7 +88,6 @@ ProcessList* volatile DelayedList;
 
 //溢出延时列表，计数器溢出时交换两个延时列表进行重置
 ProcessList* volatile OverFlowDelayedList;
-
 
 //系统关键记录
 //运行的进程数量

@@ -8,9 +8,6 @@
 #include <stdio.h>
 
 
-//时钟计数器
-long volatile tickCount;
-
 //基本类型
 typedef long BaseType_t;
 
@@ -19,6 +16,7 @@ typedef uint32_t TickType_t;
 
 //堆栈类型
 typedef unsigned int StackType_t;
+
 
 //开启中断信号量
 HANDLE timeInterruptMutex;
@@ -38,23 +36,23 @@ HANDLE toKillProcessThread;
 //调度器阻塞信号量
 HANDLE schedulerMutex;
 
-//初始化信号量
-void initSemphores();
-
 //进程模拟工作线程
 HANDLE processThread;
 
 //时钟工作线程
 HANDLE timerThread;
 
+//时钟计数器
+long volatile tickCount;
+
 //时钟周期
 #define tickTime 500
 
-//进入临界区
-#define ENTER_CRITICAL() enter_list_critical() 
+//初始化信号量
+void initSemphores();
 
-//退出临界区
-#define EXIT_CRITICAL() exit_list_critical()
+//创建计数器
+void CreateTimer();
 
 //计数器线程执行函数
 DWORD WINAPI startTimer(LPVOID param);
@@ -62,8 +60,11 @@ DWORD WINAPI startTimer(LPVOID param);
 //检查计数器是否溢出
 BOOL checkTickCountOverflow();
 
-//创建计数器
-void CreateTimer();
+//进入临界区
+#define ENTER_CRITICAL() enter_list_critical()
+
+//退出临界区
+#define EXIT_CRITICAL() exit_list_critical()
 
 //进入修改列表数据结构临界区
 void enter_list_critical();

@@ -16,43 +16,31 @@ void printInformation();
 
 
 //任务函数
-void test(void*a)
-{
+void test(void*a) {
 	//随机种子
 	srand((unsigned)time(NULL));
-
 	int count = a;
-
-	while (count++)
-	{
+	while (count++) {
 		clock_t start = clock();
-
 		//随机[100,150]s睡眠
 		Sleep(rand() % 100 + 50);
-
 		//查找堆栈中正在运行的进程，目的是获取任务函数的返回值
 		OSstackSimulatorItem_t*placeOfValue = findRunningItem();
-
 		//printf("test现在执行的进程:%s\n",placeOfValue->pcb->PCBname);
 		//printf("进程的运行结果(将被写会内存):%d\n",count);
-		if (placeOfValue != NULL)
-		{
+		if (placeOfValue != NULL) {
 			ENTER_CRITICAL();
 			{
 				//更新任务函数参数值
 				placeOfValue->functionValue = count;
-				//printf("更新完成\n");
-				//printf("%d\n",(*STATIC_OS_STACK)->startSimulatorItem->next->functionValue);
 			}
+			//printf("更新完成\n");
+			//printf("%d\n",(*STATIC_OS_STACK)->startSimulatorItem->next->functionValue);
 			EXIT_CRITICAL();
-
 			//ReleaseSemaphore(toKillProcessThread,1,NULL);
 			clock_t end = clock() - start;
-
 			placeOfValue->pcb->runTime -= end;
-
-			if (placeOfValue->pcb->runTime < 0)
-			{
+			if (placeOfValue->pcb->runTime < 0) {
 				(*processExitBuf)->pcb = placeOfValue->pcb;
 				exit_signal = TRUE;
 				return;
@@ -62,27 +50,6 @@ void test(void*a)
 	}
 }
 
-
-//任务函数1
-void test1(void*a)
-{
-	while (1)
-	{
-		Sleep(200);
-		printf("process2 is running...\n");
-	}
-}
-
-
-//任务函数0
-void test0(void*a)
-{
-	while (1)
-	{
-		Sleep(200);
-		printf("process3 is running...\n");
-	}
-}
 
 
 //菜单显示函数
@@ -170,8 +137,27 @@ void printInformation()
 		}
 		if (iter->pcb != NULL)
 		{
-			printf("  %s  \t\t  %d  \t %d \t\t   %d   \t\t      %d   \t%d\n",
-				iter->pcb->PCBname, iter->pcb->IDofPCB, iter->pcb->status,
+			const char * state = "";
+			switch (iter->pcb->status)
+			{
+			case BLOCKING:
+				state = "BLOCKING";
+				break;
+			case SUSPEND:
+				state = "SUSPEND";
+				break;;
+			case RUNNING:
+				state = "RUNNING";
+				break;
+			case READY:
+				state = "READY";
+				break;
+			case DELETED:
+				state = "DELETED";
+				break;
+			}
+			printf(" %s  \t\t  %d  \t %s \t\t   %d   \t\t      %d   \t%d\n",
+				iter->pcb->PCBname, iter->pcb->IDofPCB, state,
 				iter->pcb->processPriority, iter->pcb->runTime, (int)iter->functionValue);
 		}
 	}
@@ -185,47 +171,33 @@ int main()
 {
 	//初始化堆栈
 	initOSstackSimulator();
-
 	//初始化静态链表
 	initStaticLists();
-
 	//初始化信号量
 	initSemphores();
-
 	//设置退出信号
 	exit_signal = FALSE;
-
 	//设置阻塞信号
 	blocking_signal = 0;
-
+	//进程退出缓冲区
 	processExitBuf = malloc(sizeof(EXIT_PROCESS));
-
 	(*processExitBuf) = (EXIT_PROCESS*)malloc(sizeof(EXIT_PROCESS));
-
 	//初始进程数
 	CurrentProcessNumer = 0;
-
 	//初始就绪进程的最高优先级
 	TopPriorityReadyProcess = 30;
-
 	//初始化PCB
 	PCB_t **freeProcess = malloc(sizeof(PCB));
-
 	//系统进程名称
 	char name3[MAX_NAME_LENGTH] = "FreeProcess";
-
 	//创建系统进程
 	CreateNewProcess(runInFreeTime, name3, 1, NULL, 0, freeProcess, INFINITE);
-
 	//创建计数器
 	CreateTimer();
-
 	//调用菜单函数
 	HANDLE display = CreateThread(NULL, 0, displayFun, NULL, 0, NULL);
-
 	//启动调度器
 	startScheduler();
-
 	//释放内存
 	free(*processExitBuf);
 	free(processExitBuf);
